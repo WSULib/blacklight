@@ -101,12 +101,18 @@ module Blacklight::Controller
     deprecation_deprecate search_facet_url: 'Use search_facet_path instead.'
 
     def search_facet_path(options = {})
-      opts = search_state
-               .to_h
-               .merge(action: "facet", only_path: true)
-               .merge(options)
-               .except(:page)
-      url_for opts
+      if @exhibit.present?
+        Deprecation.silence(Blacklight::Controller) do
+          search_facet_url(options.merge(only_path: true))
+        end
+      else
+        opts = search_state
+                 .to_h
+                 .merge(action: "facet", only_path: true)
+                 .merge(options)
+                 .except(:page)
+        url_for opts
+      end
     end
 
     # Returns a list of Searches from the ids in the user's history.
