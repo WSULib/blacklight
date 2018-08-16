@@ -187,7 +187,7 @@ module Blacklight::Catalog
 
      # Email Action (this will render the appropriate view on GET requests and process the form and send the email on POST requests)
      def email_action documents
-       mail = RecordMailer.email_record(documents, {:to => params[:to], :message => params[:message]}, url_options)
+       mail = RecordMailer.email_record(documents, {:to => params[:to], :message => params[:message]}, url_options.merge(script_name: exhibit_path(@exhibit)))
        if mail.respond_to? :deliver_now
          mail.deliver_now
        else
